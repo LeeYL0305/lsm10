@@ -1,0 +1,38 @@
+<launch>
+        
+    <node pkg="tf" type="static_transform_publisher" name="link" args="0.0 0.0 0.0 0.0 0.0 0.0 base_link laser 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="link1" args="0.095 0.13 0 0.785 0.0 0.0 base_link laser_link1 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="link2" args="-0.095 -0.13 0 3.92 0.0 0.0 base_link laser_link2 100"/>
+    
+    <!-- <param name="robot_description" textfile="$(find URDF)/testbot.urdf"/>
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/> -->
+    
+    <node name="Lidar1" pkg="lsm10_v2" type="lsm10_v2" output="screen" ns="LeftLidar">
+        <param name="scan_topic" value="scan1"/>         	       
+        <param name="frame_id" value="laser_link1"/>     	      
+        <param name="serial_port" value="/dev/ttyLidar1"/>        
+        <param name="angle_disable_min" value="0.0"/>		
+        <param name="angle_disable_max" value="180.0"/>		
+        <param name="min_range" value="0.0"/>			
+        <param name="max_range" value="100.0"/>			
+        <param name="versions" value="1"/>
+    </node>
+
+    <node name="Lidar2" pkg="lsm10_v2" type="lsm10_v2" output="screen" ns="RightLidar">
+        <param name="scan_topic" value="scan2"/>         	       
+        <param name="frame_id" value="laser_link2"/>     	        
+        <param name="serial_port" value="/dev/ttyLidar2"/>        	
+        <param name="angle_disable_min" value="0.0"/>		
+        <param name="angle_disable_max" value="180.0"/>		
+        <param name="min_range" value="0.0"/>		
+        <param name="max_range" value="100.0"/>
+        <param name="versions" value="1"/>	
+		
+    </node>
+
+    <include file="$(find ira_laser_tools)/launch/laserscan_multi_merger.launch" ></include>
+
+    <node name="rviz" pkg="rviz" type="rviz" args="ef-d $(find ira_laser_tools)/rviz/merge_lidar.rviz" />
+
+
+</launch>
